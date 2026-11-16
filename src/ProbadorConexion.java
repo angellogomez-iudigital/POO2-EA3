@@ -33,7 +33,7 @@ public class ProbadorConexion {
      */
     private void cargarDriver(String url) throws ClassNotFoundException {
         if (!url.startsWith(PREFIJO_URL_SQLITE)) {
-            throw new ClassNotFoundException("Solo se admiten URL a Bases de datos de de SQLite (" + PREFIJO_URL_SQLITE + "...). La ur URL recibida fue: " + url);
+            throw new ClassNotFoundException("Solo se admiten URL a Bases de datos de SQLite (" + PREFIJO_URL_SQLITE + "...). La URL recibida fue: " + url);
         }
         Class.forName(DRIVER_SQLITE);
     }

@@ -2,12 +2,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
@@ -17,6 +19,10 @@ Ventana de la aplicación para probar conexión a la base de datos.
 public class ConexionTester extends JFrame {
 
     private static final String URL_BD = "jdbc:sqlite:inventario.db";
+    private static final Color COLOR_EXITO = new Color(0, 140, 0);
+    private static final Color COLOR_ERROR = Color.RED;
+
+    private final ProbadorConexion probadorConexion = new ProbadorConexion();
 
     private JTextField urlTxt;
     private JTextField userTxt;
@@ -89,6 +95,7 @@ public class ConexionTester extends JFrame {
         JPanel panelBoton = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         testConectionBtn = new JButton("Probar conexión");
+        testConectionBtn.addActionListener(evento -> probarConexion());
         panelBoton.add(testConectionBtn);
 
         return panelBoton;
@@ -108,6 +115,36 @@ public class ConexionTester extends JFrame {
         panelDesplazamiento.setBorder(BorderFactory.createTitledBorder("Log de conexión:"));
 
         return panelDesplazamiento;
+    }
+
+    /**
+     * Se ejecuta al presionar el botón "Probar conexión". Conecta con la clase ProbadorConexion
+     */
+    private void probarConexion() {
+        String url = urlTxt.getText().trim();
+        String user = userTxt.getText().trim();
+        String password = new String(passwordTxt.getPassword());
+
+        if (url.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Debes escribir la URL de conexión.", "Dato faltante", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        ResultadoConexion resultado = probadorConexion.probarConexion(url, user, password);
+        mostrarResultado(resultado);
+    }
+
+    /**
+     * Muestra el resultado en el textArea
+     */
+    private void mostrarResultado(ResultadoConexion resultado) {
+        areaResultado.setText(resultado.getTitulo() + "\n" + resultado.getDetalle());
+
+        if (resultado.isExitoso()) {
+            areaResultado.setForeground(COLOR_EXITO);
+        } else {
+            areaResultado.setForeground(COLOR_ERROR);
+        }
     }
 
 }
